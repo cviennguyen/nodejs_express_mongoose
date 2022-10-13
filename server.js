@@ -1,21 +1,24 @@
-const express = require("express")
-const booksRoutes = require("./routes/books")
+const { default: mongoose } = require("mongoose");
+const dotenv = require("dotenv");
 
-const app = express()
+const app = require("./app");
 
-const SERVER_PORT = 3001
+dotenv.config({ path: "./config.env" });
 
-app.use(express.json())
-app.use(express.urlencoded())
+const DB = process.env.DATABASE.replace(
+  "<PASSWORD>",
+  process.env.DATABASE_PASSWORD
+);
 
+const SERVER_PORT = process.env.SERVER_PORT;
 
-app.use("/books", booksRoutes)
+mongoose
+  .connect(DB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("DB connection successful!"));
 
-app.route("/")
-    .get((req, res) => {
-        res.send("<h1>MogoDB + Mongoose Example</h1>")
-    })
-
-app.listen(SERVER_PORT, () =>{
-    console.log(`Server running at http://localhost:${SERVER_PORT}/`)
-})
+app.listen(SERVER_PORT, () => {
+  console.log(`Server running at http://localhost:${SERVER_PORT}/`);
+});
