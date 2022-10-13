@@ -10,6 +10,8 @@ const bookSchema = new mongoose.Schema({
   price: {
     type: Number,
     require: true,
+    min: 10,
+    max: 100,
   },
   published_date: Date,
 });
